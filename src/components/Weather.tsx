@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image,StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Weatherfor, apikey } from "../Utilities/utilities";
@@ -11,6 +11,7 @@ const Weather = (props: Weatherfor) => {
   const [windspeed, setWindSpeed] = useState<number>();
   const [percip,setPercip] = useState<number>()
   const [weathericon, setWeatherIcon] = useState<string>();
+  const [ loading,setLoading] = useState<boolean>(true)
   useEffect(() => {
     getdata();
   }, []);
@@ -24,9 +25,12 @@ const Weather = (props: Weatherfor) => {
         setWeatherIcon(res.data.current.weather_icons[0]);
         setWindSpeed(res.data.current.wind_speed);
         setPercip(res.data.current.precip);
+        setLoading(false);
       });
   };
-
+  if (loading) {
+    return <View style={styles.loading}><Text>Loading...</Text></View>;
+  }
   return (
     <View style={{
         flexDirection:"column",
@@ -72,3 +76,10 @@ const Weather = (props: Weatherfor) => {
 };
 
 export default Weather;
+const styles = StyleSheet.create({
+  loading:{
+    alignItems:'center',
+    justifyContent:'center',
+    marginTop:150,
+  }
+})
